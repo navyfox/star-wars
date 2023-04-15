@@ -18,6 +18,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "react-app-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "react-app-env.d.ts", "jest.config.js", "jest-setup.js", "jest-setup.ts", "jest.config.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

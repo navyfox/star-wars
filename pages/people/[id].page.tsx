@@ -28,7 +28,7 @@ export const PersonPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Container maxWidth="sm">
-        <Box marginTop={5}>
+        <Box marginTop={5} data-testid="person-card">
           <PersonEditCard person={person} onChangePerson={onChangePerson} />
         </Box>
       </Container>

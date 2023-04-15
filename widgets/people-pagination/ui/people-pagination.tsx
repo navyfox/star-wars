@@ -23,10 +23,18 @@ export const PeoplePagination = ({
 }) => {
   return (
     <>
-      <Grid container marginTop={5} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid
+        id="wrap"
+        container
+        marginTop={5}
+        rowSpacing={5}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      >
         {people.map((person, index) => (
           <Grid width="100%" xs={12} sm={6} key={index}>
             <Link
+              id={`person-${person.url.replace(/[^\d]+/g, '')}`}
+              data-testid="person-card"
               style={{ textDecoration: 'none' }}
               href={person?.url.replace(STAR_WARS_API, '')}
               target="_blank"
@@ -48,6 +56,7 @@ export const PeoplePagination = ({
           renderItem={(item) => (
             <PaginationItem
               component={Link}
+              data-testid="pages"
               href={`/people/${item.page === 1 ? '' : `?page=${item.page}`}`}
               {...item}
             />
