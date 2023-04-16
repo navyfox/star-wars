@@ -3,6 +3,7 @@ import { render, RenderResult } from '@testing-library/react';
 import { GetServerSidePropsContext } from 'next';
 import { PeoplePage, getServerSideProps } from './index.page';
 import { getPeopleByPage, PeopleApiResponse } from '@/shared/api/people';
+import renderer from 'react-test-renderer';
 
 jest.mock('@/shared/api/people', () => ({
   getPeopleByPage: jest.fn(),
@@ -19,6 +20,11 @@ describe('PeoplePage', () => {
 
   beforeEach(() => {
     renderResult = render(<PeoplePage {...props} />);
+  });
+
+  it('renders correctly', () => {
+    const component = renderer.create(<PeoplePage {...props} />).toJSON();
+    expect(component).toMatchSnapshot();
   });
 
   it('should render without error', () => {

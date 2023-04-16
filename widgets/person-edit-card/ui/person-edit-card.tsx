@@ -1,9 +1,6 @@
 import React, { ChangeEvent } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setPerson } from '@/entities/people';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import WrapperCard from '@/shared/ui/wrapper-card';
 import { Person } from '@/shared/api/people';
 
 export const PersonEditCard = ({
@@ -15,7 +12,7 @@ export const PersonEditCard = ({
 }) => {
   if (!person) return null;
   return (
-    <WrapperCard>
+    <>
       <Stack
         spacing={{ xs: 2, sm: 4 }}
         direction="row"
@@ -80,7 +77,7 @@ export const PersonEditCard = ({
           onChange={onChangePerson}
         />
       </Stack>
-    </WrapperCard>
+    </>
   );
 };
 

@@ -1,7 +1,6 @@
 import 'public/normalize.css';
-import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { wrapperStore } from '@/app/store';
+import { wrapperStore } from '@/settings/store';
 import { Provider } from 'react-redux';
 
 function App({ Component, ...rest }: AppProps) {

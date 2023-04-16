@@ -22,6 +22,13 @@ describe('person-edit-card', () => {
     expect(component).toMatchSnapshot();
   });
 
+  it('renders null', () => {
+    const component = renderer
+      .create(<PersonEditCard person={null} onChangePerson={() => {}} />)
+      .toJSON();
+    expect(component).toMatchSnapshot();
+  });
+
   it('renders all input fields with correct default values', () => {
     const { getByLabelText } = render(
       <PersonEditCard person={TEST_PERSON} onChangePerson={() => {}} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import type { NextPage } from 'next/types';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import Container from '@mui/material/Container';
@@ -6,15 +7,13 @@ import { getPeopleByPage } from '@/shared/api/people';
 import { Person } from '@/shared/api/people';
 import PeoplePagination from '@/widgets/people-pagination';
 
-export const PeoplePage = ({
-  count,
-  people,
-  page,
-}: {
+interface PeoplePageProps {
   count: number;
   people: Person[];
   page: number;
-}) => {
+}
+
+export const PeoplePage: NextPage<PeoplePageProps> = ({ count, people, page }: PeoplePageProps) => {
   return (
     <>
       <Head>
