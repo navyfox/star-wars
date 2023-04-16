@@ -19,5 +19,7 @@ export interface Person {
 
 export interface PeopleApiResponse {
   count: number;
+  next: string;
+  previous: null;
   results: Person[];
 }

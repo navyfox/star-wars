@@ -1,83 +1,66 @@
-import React from 'react';
-import { render, RenderResult } from '@testing-library/react';
-import { GetServerSidePropsContext } from 'next';
-import { PeoplePage, getServerSideProps } from './index.page';
-import { getPeopleByPage, PeopleApiResponse } from '@/shared/api/people';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
+import { useRouter } from 'next/router';
+import { useGetPeopleByPageQuery } from '@/shared/api/people';
+import { Person } from '@/shared/api/people';
+import PeoplePage from './index.page';
 
-jest.mock('@/shared/api/people', () => ({
-  getPeopleByPage: jest.fn(),
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
 }));
+jest.mock('@/shared/api/people');
 
 describe('PeoplePage', () => {
-  const props = {
-    count: 0,
-    people: [],
-    page: 1,
-  };
+  const mockedUseRouter = useRouter as jest.Mock;
+  const mockedUseGetPeopleByPageQuery = useGetPeopleByPageQuery as jest.Mock;
 
-  let renderResult: RenderResult;
-
-  beforeEach(() => {
-    renderResult = render(<PeoplePage {...props} />);
-  });
-
-  it('renders correctly', () => {
-    const component = renderer.create(<PeoplePage {...props} />).toJSON();
-    expect(component).toMatchSnapshot();
-  });
-
-  it('should render without error', () => {
-    const { container } = renderResult;
-    expect(container).toBeInTheDocument();
-  });
-});
-
-describe('getServerSideProps', () => {
-  const mockApiResponse: PeopleApiResponse = {
-    count: 10,
-    results: [
-      {
-        name: 'Luke Skywalker',
-        height: '172',
-        mass: '77',
-        hair_color: 'blond',
-        skin_color: 'fair',
-        eye_color: 'blue',
-        birth_year: '19BBY',
-        gender: 'male',
-        url: 'https://swapi.dev/api/people/1/',
-      },
-    ],
-  };
+  const mockPeople: Person[] = [
+    {
+      name: 'Luke Skywalker',
+      height: '172',
+      mass: '77',
+      hair_color: 'blond',
+      skin_color: 'fair',
+      eye_color: 'blue',
+      birth_year: '19BBY',
+      gender: 'male',
+      url: '',
+    },
+  ];
 
   beforeEach(() => {
-    (getPeopleByPage as jest.Mock).mockResolvedValueOnce(mockApiResponse);
-  });
-
-  it('should return the expected props', async () => {
-    const mockReq = {
-      headers: {
-        cookie: '',
-      },
-    } as any;
-
-    const mockRes = {
-      setHeader: jest.fn(),
-      end: jest.fn(),
-    } as any;
-
-    const mockContext: GetServerSidePropsContext = {
+    mockedUseRouter.mockReturnValue({
       query: { page: '1' },
-      req: mockReq,
-      res: mockRes,
-      resolvedUrl: '',
-    };
-    const { props } = (await getServerSideProps(mockContext)) as { props: Object };
+      isFallback: false,
+    });
 
-    expect(getPeopleByPage).toHaveBeenCalledWith(1);
-    expect(props).toHaveProperty('count', mockApiResponse.count);
-    expect(props).toHaveProperty('people', mockApiResponse.results);
-    expect(props).toHaveProperty('page', 1);
+    mockedUseGetPeopleByPageQuery.mockReturnValue({
+      isLoading: false,
+      error: null,
+      data: {
+        count: 87,
+        results: mockPeople,
+      },
+    });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('renders the PeoplePagination component with the correct props', () => {
+    render(<PeoplePage />);
+    expect(mockedUseRouter).toHaveBeenCalled();
+    expect(mockedUseGetPeopleByPageQuery).toHaveBeenCalledWith(1, { skip: false });
+    expect(screen.getByText('name: Luke Skywalker')).toBeInTheDocument();
+  });
+
+  it('renders nothing if data is null', () => {
+    mockedUseGetPeopleByPageQuery.mockReturnValueOnce({
+      isLoading: false,
+      error: null,
+      data: null,
+    });
+    render(<PeoplePage />);
+    expect(screen.queryByText('Luke Skywalker')).not.toBeInTheDocument();
   });
 });
