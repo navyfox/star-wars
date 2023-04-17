@@ -23,7 +23,7 @@ describe('PeoplePage', () => {
       eye_color: 'blue',
       birth_year: '19BBY',
       gender: 'male',
-      url: '',
+      url: 'https://swapi.dev/api/people/1/',
     },
   ];
 
